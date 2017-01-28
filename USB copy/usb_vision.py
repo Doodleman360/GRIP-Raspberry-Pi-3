@@ -13,7 +13,7 @@ from networktables import NetworkTable
 def main():
     print('Initializing NetworkTables')
     NetworkTable.setClientMode()
-    NetworkTable.setIPAddress('localhost')
+    NetworkTable.setIPAddress('172.22.11.1')
     NetworkTable.initialize()
     
     table = NetworkTable.getTable("/vision")
