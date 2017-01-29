@@ -1,1 +1,1 @@
-python3 /home/pi/GRIP/IP/ip_vision.py
+python3 /home/pi/USB/USB_vision.py
