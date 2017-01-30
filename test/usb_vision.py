@@ -1,16 +1,14 @@
 #!/usr/bin/python3
 
 """
-Detects stronghold goals using a usb camera plugged into raspberry pi
+tests networktables from raspberry pi
 """
 
-#import cv2
-#import networktables
+import networktables
 from networktables import NetworkTable
 import os
 import sys
 import logging
-#from usb_GRIP import GripPipeline
 
 
 def main():
