@@ -71,8 +71,6 @@ class GripPipeline:
         """
         assert isinstance(value, numpy.ndarray) , "Source must be of type numpy.ndarray"
         self.__source0 = value
-    
-
 
     @staticmethod
     def __resize_image(input, width, height, interpolation):
