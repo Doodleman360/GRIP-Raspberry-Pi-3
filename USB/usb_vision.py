@@ -8,6 +8,10 @@ import cv2
 import networktables
 from networktables import NetworkTable
 from usb_GRIP import GripPipeline
+import os
+import sys
+import logging
+import time
 
 
 def extra_processing(pipeline):
@@ -37,11 +41,26 @@ def extra_processing(pipeline):
 
 
 def main():
+    logging.basicConfig(level=logging.DEBUG)
     print('Initializing NetworkTables')
     NetworkTable.setClientMode()
-    NetworkTable.setIPAddress('localhost')
+    NetworkTable.setIPAddress('10.11.57.2')
     NetworkTable.initialize()
+    time.sleep(5)
 
+    ready = False
+    # maybe works?
+    smartTable = NetworkTable
+    while (not ready):
+        try:
+            smartTable = NetworkTable.getTable("/SmartDashboard")
+            while (not smartTable.getValue("KeepAlive")):
+                time.sleep(1)
+            ready = True
+        except KeyError as e:
+            # print("Not ready!", end="", flush=True)
+            ready = False
+    
     print('Creating video capture')
     cap = cv2.VideoCapture(0)
 
@@ -49,7 +68,9 @@ def main():
     pipeline = GripPipeline()
 
     print('Running pipeline')
-    while cap.isOpened():
+    while 1:
+        if (not smartTable.getValue("KeepAlive")):
+            os.system('sudo shutdown -h now')
         have_frame, frame = cap.read()
         if have_frame:
             pipeline.process(frame)

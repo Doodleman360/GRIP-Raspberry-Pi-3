@@ -17,8 +17,8 @@ def main():
     print('Initializing NetworkTables')
     NetworkTable.setClientMode()
     #NetworkTable.setIPAddress()
-    NetworkTable.initialize(server=sys.argv[1])
-    time.sleep(10)
+    NetworkTable.initialize("10.11.57.2")
+    time.sleep(5)
     try:
         table = NetworkTable.getTable("/SmartDashboard")
         #table.putValue("centerX", 2)
