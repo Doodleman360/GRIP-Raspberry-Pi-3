@@ -15,8 +15,8 @@ class GripPipeline:
         """
         self.__source0 = None
         self.__resize_image_input = self.__source0
-        self.__resize_image_width = 480.0
-        self.__resize_image_height = 360.0
+        self.resize_image_width = 480.0
+        self.resize_image_height = 360.0
         self.__resize_image_interpolation = cv2.INTER_CUBIC
         self.resize_image_output = None
 
@@ -52,7 +52,7 @@ class GripPipeline:
         """
         #Step Resize_Image0:
         self.__resize_image_input = source0
-        (self.resize_image_output ) = self.__resize_image(self.__resize_image_input, self.__resize_image_width, self.__resize_image_height, self.__resize_image_interpolation)
+        (self.resize_image_output ) = self.__resize_image(self.__resize_image_input, self.resize_image_width, self.resize_image_height, self.__resize_image_interpolation)
 
         #Step HSV_Threshold0:
         self.__hsv_threshold_input = self.resize_image_output
