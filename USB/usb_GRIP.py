@@ -21,9 +21,9 @@ class GripPipeline:
         self.resize_image_output = None
 
         self.__hsv_threshold_input = self.resize_image_output
-        self.__hsv_threshold_hue = [55.22229698255782, 129.6694696198746]
-        self.__hsv_threshold_saturation = [0.0, 130.98122866894198]
-        self.__hsv_threshold_value = [206.38489208633092, 255.0]
+        self.__hsv_threshold_hue = [63.0, 76.0]
+        self.__hsv_threshold_saturation = [174.0, 255.0]
+        self.__hsv_threshold_value = [62.0, 173]
         self.hsv_threshold_output = None
 
         self.__find_contours_input = self.hsv_threshold_output
