@@ -32,20 +32,24 @@ def extra_processing(pipeline):
         center_y.append(y + h / 2)
         widths.append(w)
         heights.append(y)
-    # Publish to the '/vision' network table
-    pti = (widths[0] / 5 + heights[0] / 2) / 2
     table = NetworkTable.getTable("/vision")
-    table.putValue("pti", pti)
-    table.putValue("width", pipeline.resize_image_width)
-    table.putValue("height", pipeline.resize_image_height)
-    table.putValue("r1cX", center_x[0])
-    table.putValue("r1cY", center_y[0])
-    table.putValue("r1w", widths[0]/pti)
-    table.putValue("r1h", heights[0]/pti)
-    table.putValue("r2cX", center_x[1])
-    table.putValue("r2cY", center_y[1])
-    table.putValue("r2w", widths[1]/pti)
-    table.putValue("r2h", heights[1]/pti)
+    if pipeline.filter_contours_output.lenght == 2:
+        # Publish to the '/vision' network table
+        pti = (widths[0] / 5 + heights[0] / 2) / 2
+        table.putValue("pti", pti)
+        table.putValue("width", pipeline.resize_image_width)
+        table.putValue("height", pipeline.resize_image_height)
+        table.putValue("r1cX", center_x[0])
+        table.putValue("r1cY", center_y[0])
+        table.putValue("r1w", widths[0]/pti)
+        table.putValue("r1h", heights[0]/pti)
+        table.putValue("r2cX", center_x[1])
+        table.putValue("r2cY", center_y[1])
+        table.putValue("r2w", widths[1]/pti)
+        table.putValue("r2h", heights[1]/pti)
+        table.putValue("locked", True)
+    else:
+        table.putValue("locked", False)
 
 
 def main():
@@ -59,14 +63,14 @@ def main():
     ready = False
     # maybe works?
     smartTable = NetworkTable
-    while (not ready):
+    while not ready:
         try:
             smartTable = NetworkTable.getTable("/SmartDashboard")
-            while (not smartTable.getValue("KeepAlive")):
+            while not smartTable.getValue("KeepAlive"):
                 time.sleep(1)
             ready = True
         except KeyError as e:
-            # print("Not ready!", end="", flush=True)
+            # print("Waiting for connection!")
             ready = False
 
     print('Creating video capture')
@@ -78,7 +82,7 @@ def main():
 
     print('Running pipeline')
     while 1:
-        if (not smartTable.getValue("KeepAlive")):
+        if not smartTable.getValue("KeepAlive"):
             os.system('sudo shutdown -h now')
         have_frame, frame = cap.read()
         if have_frame:
