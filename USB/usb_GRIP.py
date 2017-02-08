@@ -15,8 +15,8 @@ class GripPipeline:
         """
         self.__source0 = None
         self.__resize_image_input = self.__source0
-        self.resize_image_width = 480.0
-        self.resize_image_height = 360.0
+        self.resize_image_width = 640.0
+        self.resize_image_height = 480.0
         self.__resize_image_interpolation = cv2.INTER_CUBIC
         self.resize_image_output = None
 
