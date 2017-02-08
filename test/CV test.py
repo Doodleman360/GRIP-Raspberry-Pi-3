@@ -11,6 +11,8 @@ import time
 def main():
     print('Creating video capture')
     cap = cv2.VideoCapture(0)
+    time.sleep(5)
+    cap.set(15,0.1)
     while True:
         # Capture frame-by-frame
         ret, frame = cap.read()
