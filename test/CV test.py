@@ -4,36 +4,26 @@
 tests networktables from raspberry pi
 """
 
-import networktables
-from networktables import NetworkTable
-import os
-import sys
-import logging
+import cv2
 import time
 
 
 def main():
-    logging.basicConfig(level=logging.DEBUG)
-    print('Initializing NetworkTables')
-    NetworkTable.setClientMode()
-    #NetworkTable.setIPAddress()
-    NetworkTable.initialize("10.11.57.2")
-    time.sleep(5)
-    try:
-        table = NetworkTable.getTable("/SmartDashboard")
-        #table.putValue("centerX", 2)
-        table.putValue("centerY", 3)
-        table.putValue("width", 4)
-        table.putValue("height", 5)
-        print(table.getValue("centerX"));
+    print('Creating video capture')
+    cap = cv2.VideoCapture(0)
+    while True:
+        # Capture frame-by-frame
+        ret, frame = cap.read()
 
-    except KeyError as e:
-        print(e)
-    smartTable = NetworkTable.getTable("/SmartDashboard")
-    while 1:
-        if (not smartTable.getValue("KeepAlive")):
-            os.system('shutdown now -h')
-        
+        # Display the resulting frame
+        cv2.imshow('frame', frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    # When everything done, release the capture
+    cap.release()
+    cv2.destroyAllWindows()
+
 
 
 
