@@ -64,10 +64,15 @@ def main():
         except KeyError as e:
             # print("Waiting for connection!")
             ready = False
+    table = NetworkTable.getTable("/vision")
 
     print('Creating video capture')
     cap = cv2.VideoCapture(0)
-    cap.set(15, smartTable.getValue("exposure"))
+    print(cap.get(3))
+    print(cap.get(4))
+
+    table.putValue("width", cap.get(3))
+    table.putValue("height", cap.get(4))
 
     print('Creating pipeline')
     pipeline = GripPipeline()
