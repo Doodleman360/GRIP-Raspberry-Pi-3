@@ -28,10 +28,11 @@ def extra_processing(pipeline):
     # Find the bounding boxes of the contours to get x, y, width, and height
     for contour in pipeline.filter_contours_output:
         x, y, w, h = cv2.boundingRect(contour)
-        center_x.append(x + w / 2)  # X and Y are coordinates of the top-left corner of the bounding box
-        center_y.append(y + h / 2)
-        widths.append(w)
-        heights.append(y)
+        if (2 < (h/w)) & ((h/w) < 3):
+            center_x.append(x + w / 2)  # X and Y are coordinates of the top-left corner of the bounding box
+            center_y.append(y + h / 2)
+            widths.append(w)
+            heights.append(y)
     table = NetworkTable.getTable("/vision")
     if len(pipeline.filter_contours_output) > 1:
         # Publish to the '/vision' network table
@@ -93,7 +94,7 @@ def main():
             ret, frame = cap.read()
             for contour in pipeline.filter_contours_output:
                 x, y, w, h = cv2.boundingRect(contour)
-                cv2.rectangle(frame, ( x, y ), ( x+w, y+h ), (255,255,255), 2) 
+                cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 2)
             cv2.imshow('frame', frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
