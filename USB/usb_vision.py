@@ -29,11 +29,11 @@ def extra_processing(pipeline):
     # Find the bounding boxes of the contours to get x, y, width, and height
     for contour in pipeline.filter_contours_output:
         x, y, w, h = cv2.boundingRect(contour)
-        #if (2 < (h/w)) & ((h/w) < 3):
-        center_x.append(x + w / 2)  # X and Y are coordinates of the top-left corner of the bounding box
-        center_y.append(y + h / 2)
-        widths.append(w)
-        heights.append(y)
+        if (2 < (h/w)) & ((h/w) < 3):
+            center_x.append(x + w / 2)  # X and Y are coordinates of the top-left corner of the bounding box
+            center_y.append(y + h / 2)
+            widths.append(w)
+            heights.append(y)
     table = NetworkTable.getTable("/vision")
     if len(widths) > 1:
         # Publish to the '/vision' network table
@@ -75,9 +75,13 @@ def main():
             # print("Waiting for connection!")
             ready = False
 
+    table = NetworkTable.getTable("/vision")
+    
     print('Creating video capture')
     cap = cv2.VideoCapture(0)
     cap.set(15, smartTable.getValue("exposure"))
+    table.putValue("width", cap.get(3))
+    table.putValue("height", cap.get(4))
     print(cap.get(3))
     print(cap.get(4))
 
@@ -89,6 +93,7 @@ def main():
         if not smartTable.getValue("KeepAlive"):
             cap.release()
             cv2.destroyAllWindows()
+            table.putValue("locked", False)
             os.system('sudo shutdown -h now')
         have_frame, frame = cap.read()
         if have_frame:
@@ -97,9 +102,11 @@ def main():
             ret, frame = cap.read()
             for contour in pipeline.filter_contours_output:
                 x, y, w, h = cv2.boundingRect(contour)
-                cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 2)
+                if (2 < (h/w)) & ((h/w) < 3):
+                    cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 2)
             cv2.imshow('frame', frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
+                table.putValue("locked", False)
                 break
 
     print('Capture closed')
