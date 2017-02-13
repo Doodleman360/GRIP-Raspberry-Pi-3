@@ -6,7 +6,7 @@
 import cv2
 import networktables
 from networktables import NetworkTable
-from usb_GRIP import GripPipeline
+from grip import GripPipeline
 import os
 import sys
 import logging
@@ -55,7 +55,7 @@ def main():
     NetworkTable.initialize()
     time.sleep(1)
 
-    ready = False
+    ready = True
     smartTable = NetworkTable
     while not ready:
         try:
@@ -79,15 +79,15 @@ def main():
 
     print('Running pipeline')
     while 1:
-        if not smartTable.getValue("KeepAlive"):
-            cap.release()
-            cv2.destroyAllWindows()
-            table.putValue("locked", False)
-            os.system('sudo shutdown -h now')
+        #if not smartTable.getValue("KeepAlive"):
+            #cap.release()
+            #cv2.destroyAllWindows()
+            #table.putValue("locked", False)
+            #os.system('sudo shutdown -h now')
         have_frame, frame = cap.read()
         if have_frame:
             pipeline.process(frame)
-            extra_processing(pipeline)
+            #extra_processing(pipeline)
             ret, frame = cap.read()
             for contour in pipeline.filter_contours_output:
                 x, y, w, h = cv2.boundingRect(contour)
