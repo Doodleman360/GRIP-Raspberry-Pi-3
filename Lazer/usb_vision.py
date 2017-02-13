@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 """
-Detects stronghold goals using a usb camera plugged into raspberry pi
+Detects lazer using a usb camera plugged into raspberry pi
 """
 
 import cv2
@@ -28,17 +28,22 @@ def extra_processing(pipeline):
     # Find the bounding boxes of the contours to get x, y, width, and height
     for contour in pipeline.filter_contours_output:
         x, y, w, h = cv2.boundingRect(contour)
-        center_x.append(x + w / 2)  # X and Y are coordinates of the top-left corner of the bounding box
-        center_y.append(y + h / 2)
-        widths.append(w)
-        heights.append(y)
+        if (2 < (h/w)) & ((h/w) < 3):
+            center_x.append(x + w / 2)  # X and Y are coordinates of the top-left corner of the bounding box
+            center_y.append(y + h / 2)
+            widths.append(w)
+            heights.append(y)
     table = NetworkTable.getTable("/vision")
-    if pipeline.filter_contours_output.lenght > 0:
+    if len(pipeline.filter_contours_output) > 1:
         # Publish to the '/vision' network table
+        pti = (widths[0] / 5 + heights[0] / 2) / 2
+        table.putValue("pti", pti)
+        table.putValue("width", pipeline.resize_image_width)
+        table.putValue("height", pipeline.resize_image_height)
         table.putValue("r1cX", center_x[0])
         table.putValue("r1cY", center_y[0])
-        table.putValue("r1w", widths[0])
-        table.putValue("r1h", heights[0])
+        table.putValue("r1w", widths[0]/pti)
+        table.putValue("r1h", heights[0]/pti)
         table.putValue("locked", True)
     else:
         table.putValue("locked", False)
@@ -50,7 +55,7 @@ def main():
     NetworkTable.setClientMode()
     NetworkTable.setIPAddress('10.11.57.2')
     NetworkTable.initialize()
-    time.sleep(5)
+    time.sleep(1)
 
     ready = False
     # maybe works?
@@ -64,15 +69,9 @@ def main():
         except KeyError as e:
             # print("Waiting for connection!")
             ready = False
-    table = NetworkTable.getTable("/vision")
 
     print('Creating video capture')
     cap = cv2.VideoCapture(0)
-    print(cap.get(3))
-    print(cap.get(4))
-
-    table.putValue("width", cap.get(3))
-    table.putValue("height", cap.get(4))
 
     print('Creating pipeline')
     pipeline = GripPipeline()
@@ -80,11 +79,20 @@ def main():
     print('Running pipeline')
     while 1:
         if not smartTable.getValue("KeepAlive"):
+            cap.release()
+            cv2.destroyAllWindows()
             os.system('sudo shutdown -h now')
         have_frame, frame = cap.read()
         if have_frame:
             pipeline.process(frame)
             extra_processing(pipeline)
+            ret, frame = cap.read()
+            for contour in pipeline.filter_contours_output:
+                x, y, w, h = cv2.boundingRect(contour)
+                cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 2)
+            cv2.imshow('frame', frame)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
 
     print('Capture closed')
 

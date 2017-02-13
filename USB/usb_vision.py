@@ -76,7 +76,6 @@ def main():
 
     print('Creating video capture')
     cap = cv2.VideoCapture(0)
-    cap.set(15, smartTable.getValue("exposure"))
 
     print('Creating pipeline')
     pipeline = GripPipeline()
