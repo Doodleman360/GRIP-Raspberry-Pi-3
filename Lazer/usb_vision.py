@@ -35,8 +35,6 @@ def extra_processing(pipeline):
     table = NetworkTable.getTable("/vision")
     if len(pipeline.filter_contours_output) > 1:
         # Publish to the '/vision' network table
-        table.putValue("width", pipeline.resize_image_width)
-        table.putValue("height", pipeline.resize_image_height)
         table.putValue("cX", center_x[0])
         table.putValue("cY", center_y[0])
         table.putValue("w", widths[0])
@@ -86,7 +84,7 @@ def main():
             ret, frame = cap.read()
             for contour in pipeline.filter_contours_output:
                 x, y, w, h = cv2.boundingRect(contour)
-                cv2.circle(frame, (x, y), (((w/2)+(h/2))/2), (255, 255, 255), 2)
+                cv2.circle(frame, (x, y), int(((w/2)+(h/2))/2), (255, 0, 0), 2)
             cv2.imshow('frame', frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
