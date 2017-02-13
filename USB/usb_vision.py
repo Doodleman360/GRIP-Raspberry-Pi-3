@@ -8,7 +8,6 @@ import cv2
 import networktables
 from networktables import NetworkTable
 from usb_GRIP import GripPipeline
-#from grip import GripPipeline
 import os
 import sys
 import logging
@@ -39,8 +38,6 @@ def extra_processing(pipeline):
         # Publish to the '/vision' network table
         pti = (widths[0] / 5 + heights[0] / 2) / 2
         table.putValue("pti", pti)
-        #table.putValue("width", pipeline.resize_image_width)
-        #table.putValue("height", pipeline.resize_image_height)
         table.putValue("r1cX", center_x[0])
         table.putValue("r1cY", center_y[0])
         table.putValue("r1w", widths[0]/pti)
@@ -79,11 +76,8 @@ def main():
     
     print('Creating video capture')
     cap = cv2.VideoCapture(0)
-    cap.set(15, smartTable.getValue("exposure"))
     table.putValue("width", cap.get(3))
     table.putValue("height", cap.get(4))
-    print(cap.get(3))
-    print(cap.get(4))
 
     print('Creating pipeline')
     pipeline = GripPipeline()
