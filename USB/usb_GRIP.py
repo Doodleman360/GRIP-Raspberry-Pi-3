@@ -15,15 +15,15 @@ class GripPipeline:
         """
         self.__source0 = None
         self.__resize_image_input = self.__source0
-        self.resize_image_width = 480.0
-        self.resize_image_height = 360.0
+        self.resize_image_width = 640.0
+        self.resize_image_height = 480.0
         self.__resize_image_interpolation = cv2.INTER_CUBIC
         self.resize_image_output = None
 
         self.__hsv_threshold_input = self.resize_image_output
-        self.__hsv_threshold_hue = [55.22229698255782, 129.6694696198746]
-        self.__hsv_threshold_saturation = [0.0, 130.98122866894198]
-        self.__hsv_threshold_value = [206.38489208633092, 255.0]
+        self.__hsv_threshold_hue = [63.0, 76.0]
+        self.__hsv_threshold_saturation = [174.0, 255.0]
+        self.__hsv_threshold_value = [62.0, 173]
         self.hsv_threshold_output = None
 
         self.__find_contours_input = self.hsv_threshold_output
