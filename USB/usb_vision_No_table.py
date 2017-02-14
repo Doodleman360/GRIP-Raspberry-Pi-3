@@ -11,7 +11,6 @@ import os
 import sys
 import logging
 import time
-import random
 
 
 def extra_processing(pipeline):
@@ -31,7 +30,6 @@ def extra_processing(pipeline):
             widths.append(w)
             heights.append(y)
     table = NetworkTable.getTable("/vision")
-    table.putValue("rand", random.random())
     if len(widths) > 1:
         # Publish to the '/vision' network table
         pti = (widths[0] / 5 + heights[0] / 2) / 2
@@ -57,7 +55,7 @@ def main():
     NetworkTable.initialize()
     time.sleep(1)
 
-    ready = False
+    ready = True
     smartTable = NetworkTable
     while not ready:
         try:
@@ -81,15 +79,15 @@ def main():
 
     print('Running pipeline')
     while 1:
-        if not smartTable.getValue("KeepAlive"):
-            cap.release()
-            cv2.destroyAllWindows()
-            table.putValue("locked", False)
-            os.system('sudo shutdown -h now')
+        #if not smartTable.getValue("KeepAlive"):
+            #cap.release()
+            #cv2.destroyAllWindows()
+            #table.putValue("locked", False)
+            #os.system('sudo shutdown -h now')
         have_frame, frame = cap.read()
         if have_frame:
             pipeline.process(frame)
-            extra_processing(pipeline)
+            #extra_processing(pipeline)
             ret, frame = cap.read()
             for contour in pipeline.filter_contours_output:
                 x, y, w, h = cv2.boundingRect(contour)
