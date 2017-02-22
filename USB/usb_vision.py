@@ -6,11 +6,12 @@
 import cv2
 import networktables
 from networktables import NetworkTable
-from usb_GRIP import GripPipeline
+from grip import GripPipeline
 import os
 import sys
 import logging
 import time
+import random
 
 
 def extra_processing(pipeline):
@@ -30,6 +31,7 @@ def extra_processing(pipeline):
             widths.append(w)
             heights.append(y)
     table = NetworkTable.getTable("/vision")
+    table.putValue("rand", random.random())
     if len(widths) > 1:
         # Publish to the '/vision' network table
         pti = (widths[0] / 5 + heights[0] / 2) / 2
