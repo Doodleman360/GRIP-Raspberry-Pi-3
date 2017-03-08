@@ -1,0 +1,2 @@
+sudo nano /home/pi/.config/lxsession/LXDE-pi/autostart 
+ + @lxterminal -e /home/pi/GRIP-Raspberry-Pi-3/startGRIP.sh
