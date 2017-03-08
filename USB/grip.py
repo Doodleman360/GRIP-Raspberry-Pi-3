@@ -81,6 +81,15 @@ class GripPipeline:
         self.__filter_contours_contours = self.find_contours_output
         (self.filter_contours_output) = self.__filter_contours(self.__filter_contours_contours, self.__filter_contours_min_area, self.__filter_contours_min_perimeter, self.__filter_contours_min_width, self.__filter_contours_max_width, self.__filter_contours_min_height, self.__filter_contours_max_height, self.__filter_contours_solidity, self.__filter_contours_max_vertices, self.__filter_contours_min_vertices, self.__filter_contours_min_ratio, self.__filter_contours_max_ratio)
 
+    def widen_hue():
+        hue_min = self.__hsv_threshold_hue[0];
+        hue_max = self.__hsv_threshold_hue[1];
+        self.__hsv_threshold_hue = [hue_min-1, hue_max+1]
+
+    def contract_hue():
+        hue_min = self.__hsv_threshold_hue[0];
+        hue_max = self.__hsv_threshold_hue[1];
+        self.__hsv_threshold_hue = [hue_min+1, hue_max-1]
 
     @staticmethod
     def __cv_dilate(src, kernel, anchor, iterations, border_type, border_value):

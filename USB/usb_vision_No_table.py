@@ -2,7 +2,7 @@
 
 """
 """
-
+from PIL import Image
 import cv2
 import networktables
 from networktables import NetworkTable
@@ -32,6 +32,11 @@ def main():
                 if (2 < (h/w)) & ((h/w) < 3):
                     cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 2)
             cv2.imshow('frame', frame)
+            #TODO: compress image
+            imgRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            jpg = Image.fromarray(imgRGB)
+            jpg.save("/home/pi/GRIP-Raspberry-Pi-3/USB/WEB/IMG.mjpg", 'JPEG')
+            
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 

@@ -1,0 +1,18 @@
+<html>
+<head></head>
+<body>
+<img id="refresh" src="/IMG" onload="updateStart">
+<script>
+  function updateStart() {
+    document.getElementById("refresh").onload="";
+    update;
+  }
+  function update() {
+    document.getElementById("refresh").src="IMG" + new Date().getTime() + ".jpg";
+    //document.getElementById("refresh").reload(1);
+  }
+  setInterval (update, 250);
+  //onload="window.location.reload(1)"
+  //setTimeout(function(){window.location.reload(1);}, 2000);
+</script>
+</body>

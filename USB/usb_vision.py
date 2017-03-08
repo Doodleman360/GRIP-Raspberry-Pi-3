@@ -25,14 +25,14 @@ def extra_processing(pipeline):
 
     for contour in pipeline.filter_contours_output:
         x, y, w, h = cv2.boundingRect(contour)
-        if (2 < (h/w)) & ((h/w) < 3):
+        if (2 < (h/w)) and ((h/w) < 3):
             center_x.append(x + w / 2)
             center_y.append(y + h / 2)
             widths.append(w)
             heights.append(y)
     table = NetworkTable.getTable("/vision")
     table.putValue("rand", random.random())
-    if len(widths) > 1:
+    if len(widths) == 2:
         # Publish to the '/vision' network table
         pti = (widths[0] / 5 + heights[0] / 2) / 2
         table.putValue("pti", pti)
@@ -80,12 +80,19 @@ def main():
     pipeline = GripPipeline()
 
     print('Running pipeline')
+    ##process = 0
     while 1:
         if not smartTable.getValue("KeepAlive"):
             cap.release()
             cv2.destroyAllWindows()
             table.putValue("locked", False)
             os.system('sudo shutdown -h now')
+        if smartTable.getValue("webserver") == 1:
+            ##Start
+            smartTable.putValue("webserver", 0)
+        if smartTable.getValue("webserver") == -1:
+            ##Kill process
+            smartTable.putValue("webserver", 0)
         have_frame, frame = cap.read()
         if have_frame:
             pipeline.process(frame)
@@ -93,9 +100,15 @@ def main():
             ret, frame = cap.read()
             for contour in pipeline.filter_contours_output:
                 x, y, w, h = cv2.boundingRect(contour)
-                if (2 < (h/w)) & ((h/w) < 3):
+                if (2 < (h/w)) and ((h/w) < 3):
                     cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 2)
             cv2.imshow('frame', frame)
+            
+            #TODO: compress image
+            imgRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            jpg = Image.fromarray(imgRGB)
+            jpg.save("/home/pi/GRIP-Raspberry-Pi-3/USB/WEB/IMG.mjpg", 'JPEG')
+            
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 table.putValue("locked", False)
                 break
