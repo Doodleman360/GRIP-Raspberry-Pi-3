@@ -13,7 +13,6 @@ import logging
 import time
 import random
 
-
 def extra_processing(pipeline):
     """
     :return: None
@@ -31,7 +30,7 @@ def extra_processing(pipeline):
             widths.append(w)
             heights.append(y)
     table = NetworkTable.getTable("/vision")
-    table.putValue("rand", random.random())
+    table.putValue("PIrand", random.random())
     if len(widths) == 2:
         # Publish to the '/vision' network table
         pti = (widths[0] / 5 + heights[0] / 2) / 2
@@ -48,6 +47,12 @@ def extra_processing(pipeline):
     else:
         table.putValue("locked", False)
 
+def shutdown():
+    #cap.release()
+    #cv2.destroyAllWindows()
+    #table.putValue("locked", False)
+    #os.system('sudo shutdown -h now')
+    os.system('echo git push shut the fuck down')
 
 def main():
     logging.basicConfig(level=logging.DEBUG)
@@ -59,6 +64,11 @@ def main():
 
     ready = False
     smartTable = NetworkTable
+
+    #Auto shutdown
+    rndNumber = 0
+    seconds = 0
+    
     while not ready:
         try:
             smartTable = NetworkTable.getTable("/SmartDashboard")
@@ -81,18 +91,23 @@ def main():
 
     print('Running pipeline')
     ##process = 0
+    rndNumber = smartTable.getValue("random")
+    while rndNumber = smartTable.getValue("random"):
+        time.sleep(0.1)
     while 1:
         if not smartTable.getValue("KeepAlive"):
-            cap.release()
-            cv2.destroyAllWindows()
-            table.putValue("locked", False)
-            os.system('sudo shutdown -h now')
-        if smartTable.getValue("webserver") == 1:
-            ##Start
-            smartTable.putValue("webserver", 0)
-        if smartTable.getValue("webserver") == -1:
-            ##Kill process
-            smartTable.putValue("webserver", 0)
+            shutdown()
+
+        ########
+        if rndNumber != smartTable.getValue("random"):
+            rndNumber = smartTable.getValue("random")
+            seconds = int(round(time.time()))
+        else:
+            #print('shutting down in ' + (int(round(time.time())) - seconds))
+            if int(round(time.time())) - seconds >= 10:
+                shutdown()
+        ########
+                
         have_frame, frame = cap.read()
         if have_frame:
             pipeline.process(frame)
