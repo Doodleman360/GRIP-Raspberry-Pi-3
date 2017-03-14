@@ -56,6 +56,8 @@ class GripPipeline:
 
         self.filter_contours_output = None
 
+        #self.testvar = "test"
+
 
     def process(self, source0):
         """
@@ -81,15 +83,51 @@ class GripPipeline:
         self.__filter_contours_contours = self.find_contours_output
         (self.filter_contours_output) = self.__filter_contours(self.__filter_contours_contours, self.__filter_contours_min_area, self.__filter_contours_min_perimeter, self.__filter_contours_min_width, self.__filter_contours_max_width, self.__filter_contours_min_height, self.__filter_contours_max_height, self.__filter_contours_solidity, self.__filter_contours_max_vertices, self.__filter_contours_min_vertices, self.__filter_contours_min_ratio, self.__filter_contours_max_ratio)
 
-    def widen_hue():
+    def widen_hue(self):
         hue_min = self.__hsv_threshold_hue[0];
         hue_max = self.__hsv_threshold_hue[1];
         self.__hsv_threshold_hue = [hue_min-1, hue_max+1]
+        print("hue is now:" + str(self.__hsv_threshold_hue))
 
-    def contract_hue():
+    def contract_hue(self):
         hue_min = self.__hsv_threshold_hue[0];
         hue_max = self.__hsv_threshold_hue[1];
         self.__hsv_threshold_hue = [hue_min+1, hue_max-1]
+        print("hue is now:" + str(self.__hsv_threshold_hue))
+
+    def widen_saturation(self):
+        sat_min = self.__hsv_threshold_saturation[0];
+        sat_max = self.__hsv_threshold_saturation[1];
+        self.__hsv_threshold_hue = [sat_min-1, sat_max+1]
+        print("saturation is now:" + str(self.__hsv_threshold_saturation))
+
+    def contract_saturation(self):
+        sat_min = self.__hsv_threshold_saturation[0];
+        sat_max = self.__hsv_threshold_saturation[1];
+        self.__hsv_threshold_saturation = [sat_min+1, sat_max-1]
+        print("saturation is now:" + str(self.__hsv_threshold_saturation))
+
+    def widen_value(self):
+        val_min = self.__hsv_threshold_saturation[0];
+        val_max = self.__hsv_threshold_saturation[1];
+        self.__hsv_threshold_hue = [val_min-1, val_max+1]
+        print("value is now:" + str(self.__hsv_threshold_value))
+
+    def contract_saturation(self):
+        val_min = self.__hsv_threshold_value[0];
+        val_max = self.__hsv_threshold_value[1];
+        self.__hsv_threshold_value = [val_min+1, val_max-1]
+        print("value is now:" + str(self.__hsv_threshold_value))
+
+    def widen(self):
+        self.widen_hue()
+        self.widen_saturation()
+        self.widen_value()
+
+    def contract(self):
+        self.contract_hue()
+        self.contract_saturation()
+        self.contract_value()
 
     @staticmethod
     def __cv_dilate(src, kernel, anchor, iterations, border_type, border_value):

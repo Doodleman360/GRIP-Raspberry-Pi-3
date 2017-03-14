@@ -27,9 +27,15 @@ def main():
         if have_frame:
             pipeline.process(frame)
             ret, frame = cap.read()
+            if(len(pipeline.filter_contours_output) < 2):
+                print("widen")
+                pipeline.widen()
+            if(len(pipeline.filter_contours_output) > 2):
+                print("contract")
+                pipeline.contract()
             for contour in pipeline.filter_contours_output:
                 x, y, w, h = cv2.boundingRect(contour)
-                if (2 < (h/w)) & ((h/w) < 3):
+                if (2 < (h/w)) & ((h/w) == 3):
                     cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 2)
             cv2.imshow('frame', frame)
             #TODO: compress image

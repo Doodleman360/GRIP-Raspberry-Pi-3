@@ -52,7 +52,7 @@ def shutdown():
     #cv2.destroyAllWindows()
     #table.putValue("locked", False)
     #os.system('sudo shutdown -h now')
-    os.system('echo git push shut the fuck down')
+    os.system('echo shutdown should have hapeded by now')
 
 def main():
     logging.basicConfig(level=logging.DEBUG)
