@@ -113,7 +113,7 @@ class GripPipeline:
         self.__hsv_threshold_hue = [val_min-1, val_max+1]
         print("value is now:" + str(self.__hsv_threshold_value))
 
-    def contract_saturation(self):
+    def contract_value(self):
         val_min = self.__hsv_threshold_value[0];
         val_max = self.__hsv_threshold_value[1];
         self.__hsv_threshold_value = [val_min+1, val_max-1]

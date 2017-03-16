@@ -17,6 +17,12 @@ class AnotherHandler(http.server.BaseHTTPRequestHandler):
             client.send_header("Content-type", "text/html")
             client.end_headers()
             client.wfile.write(load('/home/pi/GRIP-Raspberry-Pi-3/USB/WEB/index.html'))
+
+        if client.path == "/MAPuru":
+            client.send_response(200)
+            client.send_header("Content-type", "text/html")
+            client.end_headers()
+            client.wfile.write(load('/home/pi/GRIP-Raspberry-Pi-3/USB/WEB/smindndex.html'))
       
         if client.path[:4] == "/IMG":
             client.send_response(200)
@@ -24,6 +30,18 @@ class AnotherHandler(http.server.BaseHTTPRequestHandler):
             client.end_headers()
             try: 
                 client.wfile.write(load_binary('/home/pi/GRIP-Raspberry-Pi-3/USB/WEB/IMG.mjpg'))
+            except BrokenPipeError as e:
+                if False:
+                    print(e)
+                if False:
+                    print("table flip")
+
+        if client.path[:4] == "/map":
+            client.send_response(200)
+            client.send_header("Content-type", "image/jpg")
+            client.end_headers()
+            try: 
+                client.wfile.write(load_binary('/home/pi/GRIP-Raspberry-Pi-3/USB/WEB/map.mjpg'))
             except BrokenPipeError as e:
                 if False:
                     print(e)

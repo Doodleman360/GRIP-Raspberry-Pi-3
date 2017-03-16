@@ -42,6 +42,9 @@ def main():
             imgRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             jpg = Image.fromarray(imgRGB)
             jpg.save("/home/pi/GRIP-Raspberry-Pi-3/USB/WEB/IMG.mjpg", 'JPEG')
+
+            img = Image.fromarray(pipeline.hsv_threshold_output)
+            img.save("/home/pi/GRIP-Raspberry-Pi-3/USB/WEB/map.mjpg", 'JPEG')
             
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
