@@ -68,7 +68,8 @@ def main():
     #Auto shutdown
     rndNumber = 0
     seconds = 0
-    
+
+    print("waiting for networktables")
     while not ready:
         try:
             smartTable = NetworkTable.getTable("/SmartDashboard")
@@ -78,7 +79,9 @@ def main():
         except KeyError as e:
             # print("Waiting for connection!")
             ready = False
-
+            
+    print("conected to networktables")
+    
     table = NetworkTable.getTable("/vision")
     
     print('Creating video capture')
@@ -89,11 +92,12 @@ def main():
     print('Creating pipeline')
     pipeline = GripPipeline()
 
-    print('Running pipeline')
     ##process = 0
+    print("waiting for shutdown timer to start")
     rndNumber = smartTable.getValue("random")
-    while rndNumber = smartTable.getValue("random"):
+    while rndNumber == smartTable.getValue("random"):
         time.sleep(0.1)
+    print("main loop")
     while 1:
         if not smartTable.getValue("KeepAlive"):
             shutdown()
@@ -113,6 +117,14 @@ def main():
             pipeline.process(frame)
             extra_processing(pipeline)
             ret, frame = cap.read()
+            
+            if(len(pipeline.filter_contours_output) < 2):
+                print("widen")
+                pipeline.widen()
+            if(len(pipeline.filter_contours_output) > 2):
+                print("contract")
+                pipeline.contract()
+                
             for contour in pipeline.filter_contours_output:
                 x, y, w, h = cv2.boundingRect(contour)
                 if (2 < (h/w)) and ((h/w) < 3):
